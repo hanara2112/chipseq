@@ -1,0 +1,130 @@
+% =============================================================
+% ChIP-seq Assignment Report — Overleaf-ready
+% Compile: pdflatex report.tex   (or LuaLaTeX/XeLaTeX)
+% Place igv.png in the same directory.
+% =============================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{xcolor}
+\usepackage{titlesec}
+
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.6em}{}
+\setlength{\parskip}{4pt}
+\setlength{\parindent}{0pt}
+
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black}
+
+% -- Front matter — fill these in -----------------------------
+\newcommand{\studentname}{Aryaman Bahl}
+\newcommand{\studentid}{2022113010}
+\newcommand{\coursecode}{Molecular Biology — S26}
+\newcommand{\submissiondate}{\today}
+% -- Resources — fill these in --------------------------------
+\newcommand{\repourl}{https://github.com/hanara2112/chipseq.git}
+\newcommand{\notebookurl}{https://hanara2112.github.io/chipseq/extra\_enhancer\_analysis.html}
+% -------------------------------------------------------------
+
+\title{\vspace{-1.5em}\textbf{H3K27ac ChIP-seq in IL7-High Mouse T-cells:\\
+Active-Enhancer Landscape Profiling against an IgG Background}}
+\author{\studentname\quad\textbar\quad\studentid\quad\textbar\quad\coursecode}
+\date{\submissiondate}
+
+\begin{document}
+\maketitle
+\vspace{-1.6em}
+
+% =============================================================
+\section*{Introduction}
+Eukaryotic gene regulation is encoded only partly in DNA sequence; a second, equally informative layer is written into the chromatin in the form of post-translational histone modifications. Two of the most diagnostic of these are H3K4me3 and H3K27ac. \textbf{H3K4 trimethylation} is deposited at active transcription start sites (TSSs) by the COMPASS/SET1 complex recruited by RNA polymerase II, and so faithfully marks active \emph{promoters}. \textbf{H3K27 acetylation} is deposited by the acetyl-transferases p300/CBP at any chromatin region engaged by transcription factors and co-activators, and so marks both active promoters and active distal \emph{enhancers}. Profiling these marks therefore reads out two complementary slices of a cell's active transcriptional programme.
+
+The data set assigned for this report is an H3K27ac ChIP-seq library (sample S295) and a matched IgG isotype-control library (S286) from IL-7-stimulated mouse T-cells, each with 1\,M paired-end reads against the mm10 reference genome. The aim is to identify regions of significant H3K27ac enrichment, demonstrate that they exceed the non-specific background measured by IgG, characterise their distribution across the genome, and interpret these results in terms of promoter and enhancer biology.
+
+% =============================================================
+\section*{Methods (brief)}
+Reads were quality-checked (FastQC/MultiQC), adapter- and quality-trimmed (Trim~Galore at $Q\!\geq\!20$), and aligned to mm10 with Bowtie2 in paired-end mode. Aligned BAMs were de-duplicated, then filtered to retain only properly-paired alignments with $\text{MAPQ}\!\geq\!20$. H3K27ac peaks were called with MACS2 in broad-peak mode using the IgG library as control; an IgG self-call (no control) provided a negative-control baseline. Peaks were annotated to genomic features with ChIPseeker against \texttt{TxDb.Mmusculus.UCSC.mm10.knownGene}, and RPKM-normalised coverage tracks were visualised in IGV. Detailed parameters and tool versions are deposited alongside the code (see \emph{Resources}).
+
+% =============================================================
+\section*{Results}
+
+\subsection*{Read quality, alignment, and post-processing}
+All four FASTQ files passed per-base sequence quality QC: median Phred scores were $\geq$30 across all 151\,bp positions in every sample, with no detectable 3$'$-end quality decay. Both libraries flagged the expected presence of Illumina TruSeq adapter sequence, which was successfully removed by trimming; the IgG library additionally showed a slightly broader GC distribution than the H3K27ac sample (41--43\,\% vs.\ 51\,\%), consistent with IgG sampling the genome more uniformly while a specific antibody enriches for GC-biased regulatory regions. Adapter removal is essential because adapter bases are not present in the reference genome and would otherwise either prevent alignment or cause artefactual signal at read ends.
+
+Bowtie2 aligned 95.80\,\% of S295 reads and 95.33\,\% of S286 reads to mm10 (Table~\ref{tab:pipeline}). The fraction of \emph{concordantly and uniquely} mapped pairs — meaning both mates align to the same chromosome in the expected orientation, within the expected fragment size, and to a single best location — was 88.26\,\% for S295 versus 74.44\,\% for S286. The lower unique-mapping fraction of IgG reflects its non-specific nature: it samples repetitive sequence proportionally to its genomic abundance, and reads from repeats cannot be uniquely placed. The remaining $\sim$5\,\% of unaligned reads in each library are typical and arise from residual adapter dimers, sequencing errors, contamination, and reads from regions absent or collapsed in the reference. Capping the maximum allowed insert size at 2\,kb during alignment prevents Bowtie2 from spuriously pairing reads that map far apart due to structural variation or random ligation artefacts, while still being permissive of all biologically real ChIP fragments (typically 200--500\,bp after sonication).
+
+PCR duplicates — read pairs with identical mapping coordinates that originate from a single template molecule over-amplified during library preparation — inflate apparent coverage at specific positions and produce sharp false peaks if not removed. Duplication rates after marking (with mate-information first reconstructed by a fixmate step, which is required for paired-end duplicate identification) were healthy at 8.14\,\% (S295) and 9.74\,\% (S286), within the $<$15\,\% range expected for a complex library. The slightly higher IgG rate is consistent with its smaller pool of unique fragments being amplified more deeply. A subsequent quality filter retained only properly-paired alignments with $\text{MAPQ}\!\geq\!20$. The MAPQ score is a Phred-scaled estimate of the probability that a read is mis-placed; a threshold of 20 corresponds to a 1\,\% mis-mapping ceiling and is the standard cutoff because it removes effectively all multi-mappers (which carry MAPQ\,0--1) while retaining most high-confidence unique alignments. Reads of low MAPQ are dominated by repetitive elements (SINEs, LINEs, satellites), segmental duplications, centromeric and pericentromeric regions, and recently duplicated paralogous gene families.
+
+\begin{table}[h]
+\centering
+\caption{Read flow through the processing pipeline.}
+\label{tab:pipeline}
+\small
+\begin{tabular}{lrr}
+\toprule
+Step & S295 (H3K27ac) & S286 (IgG) \\
+\midrule
+Raw read pairs                              & 998{,}581 & 998{,}498 \\
+Bowtie2 overall alignment rate              & 95.80\,\%  & 95.33\,\%  \\
+\;\;Concordant, unique                      & 88.26\,\%  & 74.44\,\%  \\
+\;\;Concordant, multi-mapper                & 7.54\,\%   & 20.89\,\%  \\
+PCR duplicate rate                          & 8.14\,\%   & 9.74\,\%   \\
+After MAPQ\,$\geq$\,20 + proper-pair (reads)& 1{,}660{,}742 & 1{,}461{,}448 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Peak calling: ChIP versus IgG}
+A peak in ChIP-seq is a contiguous genomic interval where the local density of immunoprecipitated reads is statistically elevated above the surrounding background — operationally, a region the antibody has bound repeatedly, indicating local enrichment of the targeted modification. A matched control such as an IgG library is necessary because background read density is not uniform across the genome: chromatin accessibility, sonication bias, GC-content effects, and non-specific antibody pull-down all produce regional pile-ups that have nothing to do with the histone mark. MACS2 distinguishes real enrichment from such noise by modelling the local read distribution under a dynamic Poisson whose mean is taken from the control track over multiple length scales (1\,kb, 5\,kb, 10\,kb), computing a $p$-value at every position, and controlling the false-discovery rate by Benjamini--Hochberg adjustment.
+
+Run in broad-peak mode against the IgG control, MACS2 returned \textbf{18{,}681} significantly enriched H3K27ac regions ($q\!\leq\!0.05$; Table~\ref{tab:peaks}). Peaks have a median width of 1{,}218\,bp (max 27\,kb) and a mean fold-enrichment of 4.54$\times$ over IgG (max 17.12$\times$); the ten strongest peaks span 13--17$\times$ enrichment and lie on autosomes only — collectively a clean, broad active-chromatin signature with the multi-nucleosomal width expected of H3K27ac. The IgG self-call, run with no control at the identical statistical threshold, returned \textbf{zero} peaks. This is the ideal outcome: it demonstrates that the IgG library has no locus-specific enrichment of its own, and therefore that the 18{,}681 H3K27ac peaks cannot be explained by chromatin accessibility, sonication bias, or PCR artefacts — they reflect genuine antibody-driven enrichment for the targeted modification.
+
+\begin{table}[h]
+\centering
+\caption{Peak count summary (MACS2, $q\!\leq\!0.05$).}
+\label{tab:peaks}
+\small
+\begin{tabular}{lllr}
+\toprule
+Sample & Mark & Mode & \# Peaks \\
+\midrule
+S295 (H3K27ac) & H3K27ac      & broad, IgG-controlled & \textbf{18{,}681} \\
+S286 (IgG)     & IgG control  & narrow, no control    & \textbf{0}        \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Genomic distribution of peaks}
+Annotation of the 18{,}681 peaks against mm10 gene models (TSS region $\pm$3\,kb) produced the distribution: \textbf{55.34\,\%~promoter} (50.5\,\% within 1\,kb of a TSS), \textbf{18.82\,\%~distal intergenic}, \textbf{18.08\,\%~intronic} (1\textsuperscript{st} and other introns combined), and 8.05\,\%~exonic/UTR. The promoter share captures the well-described co-occurrence of H3K27ac and H3K4me3 at \emph{actively transcribing} promoters; the combined intronic + distal-intergenic share ($\sim$37\,\%) corresponds to the canonical pool of distal active enhancers that H3K27ac additionally marks. Enhancers appear far from gene promoters because they are \emph{cis}-regulatory elements that contact their target promoter through cohesin/CTCF-anchored 3D chromatin loops — they are not constrained to lie next to the gene they regulate, and most often live tens of kilobases away in introns of the regulated gene or in distal intergenic space.
+
+\subsection*{Coverage visualisation in IGV}
+Figure~\ref{fig:igv} shows the RPKM-normalised IGV coverage tracks for the H3K27ac and IgG libraries together with the called peak annotation. Peak height in the browser represents read coverage depth at that position (here RPKM-normalised), so taller peaks correspond to more sequenced fragments stacked at the locus and therefore more H3K27ac-modified chromatin pulled down by the antibody. Three observations are immediately visible: (i) the H3K27ac track shows a discrete, broad domain that overlaps the MACS2 peak interval; (ii) the IgG track on the same axis is essentially flat across the same window, mirroring the quantitative observation that IgG produced zero peaks genome-wide; and (iii) the H3K27ac peak is visibly broad — were an H3K4me3 track loaded at the same locus it would appear as a much sharper, narrower spike, because H3K4me3 is deposited on a small number of nucleosomes immediately flanking the TSS, while H3K27ac decorates the entire body of an active enhancer or promoter, often spanning tens of nucleosomes.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{igv.png}
+\caption{Representative IGV view. Top: H3K27ac (S295) RPKM coverage showing a broad pile-up over the called peak. Bottom: IgG (S286) RPKM coverage on the same locus, flat. The peak interval shown is one of the strongest H3K27ac peaks (fold-enrichment $>$13$\times$).}
+\label{fig:igv}
+\end{figure}
+
+% =============================================================
+\section*{Biological interpretation}
+The results define two complementary populations of H3K27ac signal in IL-7-stimulated T-cells. The promoter-proximal majority ($\sim$55\,\% of peaks) identifies the set of actively transcribing genes in this cell state — a snapshot of the current transcriptional programme. Where this overlaps an H3K4me3 promoter set (not assigned to this report) it would mark fully active genes, distinct from \emph{bivalent} loci that carry only H3K4me3 and are transcriptionally poised. The remaining $\sim$37\,\% of peaks at intronic and distal-intergenic positions identifies the active enhancer landscape of the cell. Active enhancers are the principal determinants of cell identity: housekeeping promoters are largely shared across tissues, but each cell type marks a unique subset of enhancers with H3K27ac, and remodelling that enhancer set — for example in response to IL-7 signalling, where STAT5 acts together with lineage transcription factors such as GATA3, TCF1 and RUNX1 — is how T-cells reshape their gene-expression programme. Loss of an enhancer's H3K27ac, e.g.\ via inhibition of p300 or BRD4, collapses transcription of the connected gene without altering the promoter itself, illustrating the causal regulatory role of these distal sites.
+
+The two histone marks studied in this assignment occupy complementary positions within this picture. H3K4me3 is geometrically restricted to active TSSs because it is deposited by COMPASS/SET1 in tight association with the RNA Pol II pre-initiation complex and feeds back to recruit TFIID via the PHD finger of TAF3 — it is in effect a local stabiliser of the transcription-permissive state at gene starts, producing narrow, focused peaks. H3K27ac, by contrast, is laid down by p300/CBP at any chromatin region engaged by transcription factors and co-activators, and so spreads broadly along enhancer bodies that may lie far from any annotated TSS. The genomic distribution observed here — 55\,\% promoter / 19\,\% intergenic / 18\,\% intronic — sits exactly between the textbook profile of a pure promoter mark and that of a pure enhancer mark, faithfully reflecting H3K27ac's dual role at both active promoters and active enhancers.
+
+These chromatin modifications qualify as \emph{epigenetic} regulators because they satisfy the operational definition: they are heritable across DNA replication and cell division (writers re-deposit them on newly assembled nucleosomes), reversible by dedicated writer/reader/eraser enzymes (here p300/CBP and HDACs in the case of H3K27ac), and alter gene expression without altering the underlying DNA sequence. Together with DNA methylation and 3D chromatin architecture they encode the cellular memory that allows a single genome to support hundreds of stable, distinct cell states — and quantitative profiling of their genome-wide distribution, as performed here, is one of the most direct experimental windows onto that regulatory layer.
+
+% -- Resources / reproducibility footer ------------------------
+\vspace{0.6em}\noindent\rule{\linewidth}{0.3pt}\\[2pt]
+\footnotesize
+\textbf{Resources.}\;
+Full pipeline code, intermediate logs, complete per-step assignment Q\&A, and a bonus super-enhancer ranking + GO-enrichment notebook are deposited at
+\href{\repourl}{\texttt{\repourl}}; the rendered notebook is available at \href{\notebookurl}{\texttt{extra\_enhancer\_analysis.html}}.
+Tool versions: FastQC 0.12.1, Trim~Galore (Cutadapt 5.2), Bowtie2 (mm10 pre-built index), samtools 1.23.1, MACS2 2.2.9.1, deepTools 3.5.6, ChIPseeker (Bioconductor).
+
+\end{document}

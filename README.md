@@ -3,6 +3,10 @@
 ChIP-seq analysis assignment, MolBio S26 (IIIT-H).
 Histone modification ChIP-seq with IgG control, mouse genome (mm10).
 
+📊 **[View bonus enhancer analysis (rendered notebook)](https://hanara2112.github.io/chipseq/extra_enhancer_analysis.html)** — top peaks, super-enhancer ranking, GO enrichment.
+
+> *Note:* the link works once GitHub Pages is enabled for this repo. **Settings → Pages → Source: `main`, folder: `/` (root) → Save.** The page will then be served from `https://hanara2112.github.io/chipseq/extra_enhancer_analysis.html`.
+
 ## Assigned samples
 
 | Role | Sample | Library | Condition | Mark |
