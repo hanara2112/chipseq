@@ -13,37 +13,36 @@
 \usepackage{caption}
 \usepackage{xcolor}
 \usepackage{titlesec}
+\usepackage{amsmath}
 
-\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.6em}{}
-\setlength{\parskip}{4pt}
+\titleformat{\section}{\normalfont\normalsize\bfseries}{\thesection}{0.5em}{}
+\setlength{\parskip}{3pt}
 \setlength{\parindent}{0pt}
 
 \hypersetup{colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black}
 
-% -- Front matter — fill these in -----------------------------
+% -- Front matter —
 \newcommand{\studentname}{Aryaman Bahl}
 \newcommand{\studentid}{2022113010}
 \newcommand{\coursecode}{Molecular Biology — S26}
 \newcommand{\submissiondate}{\today}
-% -- Resources — fill these in --------------------------------
+
+% -- Resources —
 \newcommand{\repourl}{https://github.com/hanara2112/chipseq.git}
 \newcommand{\notebookurl}{https://hanara2112.github.io/chipseq/docs/extra_enhancer_analysis.html}
-% -------------------------------------------------------------
 
-\title{\vspace{-1.5em}\textbf{H3K27ac ChIP-seq in IL7-High Mouse T-cells:\\
-Active-Enhancer Landscape Profiling against an IgG Background}}
-\author{\studentname\quad\textbar\quad\studentid\quad\textbar\quad\coursecode}
-\date{\submissiondate}
+\title{\vspace{-2em}\textbf{H3K27ac ChIP-seq in IL7-High Mouse T-cells:\\[-0.3em]
+Active Enhancer Landscape Profiling vs IgG Background}}
+\author{\studentname\ \textbar\ \studentid\ \textbar\ \coursecode}
+\date{\vspace{-0.8em}\submissiondate}
 
 \begin{document}
 \maketitle
-\vspace{-1.6em}
 
-\begin{center}\small
-\textbf{Code:}~\href{\repourl}{\texttt{github.com/hanara2112/chipseq}}\quad\textbar\quad
-\textbf{Bonus notebook (live):}~\href{\notebookurl}{\texttt{hanara2112.github.io/chipseq/.../extra\_enhancer\_analysis.html}}
+\begin{center}\normalsize
+\href{\repourl}{\texttt{Code}}\ \textbar\ 
+\href{\notebookurl}{\texttt{Notebook}}
 \end{center}
-\vspace{-0.4em}
 
 % =============================================================
 \section*{Introduction}
@@ -116,7 +115,8 @@ Figure~\ref{fig:igv} shows the RPKM-normalised IGV coverage tracks for the H3K27
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.95\linewidth]{igv.png}
-\caption{Representative IGV view at \textbf{<INSERT GENE / chr:start--end FROM THE SCREENSHOT RULER>}. Top: H3K27ac (S295) RPKM coverage showing a broad pile-up over the called peak. Bottom: IgG (S286) RPKM coverage on the same locus, flat. The peak interval shown is one of the strongest H3K27ac peaks (fold-enrichment $>$13$\times$ over IgG).}
+\caption{Representative IGV view at \textbf{Actb 
+  (chr5:142{,}901{,}500--142{,}904{,}600)}. Top: H3K27ac (S295) RPKM coverage showing a broad pile-up over the called peak. Bottom: IgG (S286) RPKM coverage on the same locus, flat. The peak interval shown is one of the strongest H3K27ac peaks (fold-enrichment $>$13$\times$ over IgG).}
 \label{fig:igv}
 \end{figure}
 
