@@ -23,10 +23,11 @@ suppressPackageStartupMessages({
 })
 
 PROJECT  <- path.expand("~/IIITH/S26/mb/project")
-PEAK_FN  <- file.path(PROJECT, "peaks/H3K27ac/IL7-H_H3k27ac_S295_peaks.broadPeak")
-OUT_CSV  <- file.path(PROJECT, "peaks/H3K27ac/H3K27ac_annotated.csv")
-OUT_PDF  <- file.path(PROJECT, "qc/chipseeker_H3K27ac.pdf")
-OUT_TXT  <- file.path(PROJECT, "qc/chipseeker_summary.txt")
+RESULTS  <- file.path(PROJECT, "results")
+PEAK_FN  <- file.path(RESULTS, "peaks/H3K27ac/IL7-H_H3k27ac_S295_peaks.broadPeak")
+OUT_CSV  <- file.path(RESULTS, "peaks/H3K27ac/H3K27ac_annotated.csv")
+OUT_PDF  <- file.path(RESULTS, "qc/chipseeker_H3K27ac.pdf")
+OUT_TXT  <- file.path(RESULTS, "qc/chipseeker_summary.txt")
 
 txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
 

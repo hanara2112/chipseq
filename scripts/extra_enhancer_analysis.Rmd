@@ -33,7 +33,7 @@ suppressPackageStartupMessages({
 })
 
 PROJECT <- path.expand("~/IIITH/S26/mb/project")
-anno_csv <- file.path(PROJECT, "peaks/H3K27ac/H3K27ac_annotated.csv")
+anno_csv <- file.path(PROJECT, "results/peaks/H3K27ac/H3K27ac_annotated.csv")
 df <- read.csv(anno_csv, stringsAsFactors = FALSE)
 cat("loaded", nrow(df), "annotated peaks\n")
 ```

@@ -3,8 +3,11 @@
 set -euo pipefail
 
 PROJECT="$HOME/IIITH/S26/mb/project"
-DATA="$PROJECT/student_dataset"
-OUT="$PROJECT/trimmed"
+DATA="$PROJECT/data"
+RESULTS="$PROJECT/results"
+
+RAW="$DATA/student_dataset"
+OUT="$DATA/trimmed"
 mkdir -p "$OUT"
 
 SAMPLES=(IL7-H_H3k27ac_S295 IL7-H_igG_S286)
@@ -12,8 +15,8 @@ SAMPLES=(IL7-H_H3k27ac_S295 IL7-H_igG_S286)
 echo "=== Step 2: Adapter trimming (Q20, paired-end) ==="
 
 for sample in "${SAMPLES[@]}"; do
-  R1="$DATA/${sample}_R1_1M.fastq.gz"
-  R2="$DATA/${sample}_R2_1M.fastq.gz"
+  R1="$RAW/${sample}_R1_1M.fastq.gz"
+  R2="$RAW/${sample}_R2_1M.fastq.gz"
 
   echo ">>> Trimming $sample"
   trim_galore \

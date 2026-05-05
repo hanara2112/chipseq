@@ -3,9 +3,11 @@
 set -euo pipefail
 
 PROJECT="$HOME/IIITH/S26/mb/project"
-TRIMMED="$PROJECT/trimmed"
-OUT="$PROJECT/aligned"
-INDEX="$PROJECT/genome/mm10"
+DATA="$PROJECT/data"
+RESULTS="$PROJECT/results"
+TRIMMED="$DATA/trimmed"
+OUT="$DATA/aligned"
+INDEX="$DATA/genome/mm10"
 mkdir -p "$OUT"
 
 SAMPLES=(IL7-H_H3k27ac_S295 IL7-H_igG_S286)

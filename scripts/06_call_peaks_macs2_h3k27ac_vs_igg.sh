@@ -5,8 +5,10 @@
 set -euo pipefail
 
 PROJECT="$HOME/IIITH/S26/mb/project"
-ALIGNED="$PROJECT/aligned"
-PEAKS="$PROJECT/peaks"
+DATA="$PROJECT/data"
+RESULTS="$PROJECT/results"
+ALIGNED="$DATA/aligned"
+PEAKS="$RESULTS/peaks"
 mkdir -p "$PEAKS/H3K27ac" "$PEAKS/IgG"
 
 CHIP="IL7-H_H3k27ac_S295"

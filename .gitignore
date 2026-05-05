@@ -1,44 +1,40 @@
 # =============================================================
 # .gitignore — H3K27ac ChIP-seq assignment
-# Goal: keep scripts + small results + docs; drop large/regenerable data.
+# Strategy: track scripts + small results + docs.
+#           ignore raw data, large binaries, regenerable artefacts.
 # =============================================================
 
-# ---- raw data ------------------------------------------------
-# 1.5 GB of FASTQs — re-downloadable from the assignment data link
-student_dataset/
+# ---- raw + reference data (large, regenerable) --------------
+# 1.5 GB raw FASTQs
+data/student_dataset/
+# post-trim FASTQs (regenerable)
+data/trimmed/*.fq.gz
+data/trimmed/*.fastq.gz
+# per-file fastqc artefacts
+data/trimmed/*_fastqc.html
+data/trimmed/*_fastqc.zip
+# all BAMs are large + regenerable
+data/aligned/*.bam
+data/aligned/*.bam.bai
+data/aligned/*.sam
+# 3.5 GB Bowtie2 index (keep only the build script)
+data/genome/*
+!data/genome/make_mm10.sh
 
-# ---- reference genome ----------------------------------------
-# 3.5 GB Bowtie2 index — rebuildable via genome/make_mm10.sh
-# (use genome/* instead of genome/ so the !exception below works)
-genome/*
-!genome/make_mm10.sh
+# ---- coverage tracks (large, regenerable) -------------------
+results/coverage/*.bw
 
-# ---- intermediate pipeline artefacts -------------------------
-# Trimmed FASTQs (regenerable from raw)
-trimmed/*.fq.gz
-trimmed/*.fastq.gz
-# Per-sample post-trim FastQC artefacts (multiqc covers raw QC)
-trimmed/*_fastqc.html
-trimmed/*_fastqc.zip
+# ---- raw multiqc data dir (HTML report itself is tracked) ---
+results/qc/multiqc_report_data/
+results/qc/fastqc_raw/
 
-# BAMs are large + regenerable — keep only logs/metrics
-aligned/*.bam
-aligned/*.bam.bai
-aligned/*.sam
-
-# bigWig coverage tracks (regenerable from filtered BAMs)
-qc/*.bw
-
-# MultiQC raw data dir (HTML report itself is kept)
-qc/fastqc_raw/multiqc_report_data/
-
-# ---- archives ------------------------------------------------
+# ---- archives -----------------------------------------------
 *.zip
 *.tar
 *.tar.gz
 *.tgz
 
-# ---- editor / OS / IDE junk ----------------------------------
+# ---- editor / OS / IDE junk ---------------------------------
 .DS_Store
 .idea/
 .vscode/
@@ -51,7 +47,7 @@ qc/fastqc_raw/multiqc_report_data/
 .RData
 .Rproj.user/
 *.Rproj
-# RMarkdown render side-effects (cache dirs only — ship the rendered HTML deliverable)
+# RMarkdown render side-effects (cache dirs only)
 *_files/
 *_cache/
 
@@ -60,21 +56,6 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 
-# ---- logs from prior runs (stale) ---------------------------
-step*_*.log
+# ---- build / temp -------------------------------------------
 nohup.out
-
-# =============================================================
-# Explicitly KEEP (override blanket rules above):
-#   - all *.sh / *.R / *.Rmd scripts
-#   - all *.md docs (README, chipseq_analysis)
-#   - ChIP Project.pdf, implementation_plan.md.resolved
-#   - peaks/**/*.broadPeak, *.narrowPeak, *.gappedPeak, *.xls, *.csv, *.bed
-#   - qc/peak_count_summary.tsv, chipseeker_summary.txt, chipseeker_H3K27ac.pdf
-#   - qc/*_dup_metrics.txt, *_filter_stats.txt
-#   - qc/fastqc_raw/multiqc_report.html
-#   - aligned/*_bowtie2.log
-#   - peaks/**/*_macs2.log
-#   - trimmed/*_trimming_report.txt
-# Nothing to do — they're not matched by any rule above.
-# =============================================================
+*.log.tmp

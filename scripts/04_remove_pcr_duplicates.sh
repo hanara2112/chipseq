@@ -3,8 +3,10 @@
 set -euo pipefail
 
 PROJECT="$HOME/IIITH/S26/mb/project"
-ALIGNED="$PROJECT/aligned"
-QC="$PROJECT/qc"
+DATA="$PROJECT/data"
+RESULTS="$PROJECT/results"
+ALIGNED="$DATA/aligned"
+QC="$RESULTS/qc"
 mkdir -p "$QC"
 
 SAMPLES=(IL7-H_H3k27ac_S295 IL7-H_igG_S286)

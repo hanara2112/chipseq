@@ -3,8 +3,10 @@
 set -euo pipefail
 
 PROJECT="$HOME/IIITH/S26/mb/project"
-PEAKS="$PROJECT/peaks"
-QC="$PROJECT/qc"
+DATA="$PROJECT/data"
+RESULTS="$PROJECT/results"
+PEAKS="$RESULTS/peaks"
+QC="$RESULTS/qc"
 mkdir -p "$QC"
 
 CHIP_PEAKS="$PEAKS/H3K27ac/IL7-H_H3k27ac_S295_peaks.broadPeak"
@@ -21,7 +23,7 @@ else
   RATIO=$(awk -v c="$N_CHIP" -v i="$N_IGG" 'BEGIN{printf "%.1fx", c/i}')
 fi
 
-OUT="$QC/peak_count_summary.tsv"
+OUT="$RESULTS/peak_count_summary.tsv"
 {
   printf "Sample\tCondition\tMark\tPeak_File\tN_Peaks\n"
   printf "S295\tIL7-High\tH3K27ac\t%s\t%s\n" "$(basename "$CHIP_PEAKS")" "$N_CHIP"
