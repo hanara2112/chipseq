@@ -1,0 +1,112 @@
+---
+title: "Active enhancer landscape in IL7-High T-cells (H3K27ac)"
+subtitle: "Extra analysis — beyond the assigned pipeline"
+author: "S295 (IL7-H_H3k27ac) ChIP-seq"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
+                      fig.width = 8, fig.height = 5)
+```
+
+## Goal
+
+Take the **18,681 H3K27ac peaks** from Step 6 forward and ask three biological
+questions the assignment doesn't cover:
+
+1. **Where is the strongest H3K27ac signal?** — top-ranked peaks and their genes.
+2. **Are any peaks "super-enhancers"?** — rank-ordered signal ("hockey stick").
+3. **What pathways are enriched at H3K27ac-marked genes?** — GO over-representation.
+
+```{r load}
+suppressPackageStartupMessages({
+  needed <- c("ChIPseeker", "TxDb.Mmusculus.UCSC.mm10.knownGene",
+              "org.Mm.eg.db", "clusterProfiler", "ggplot2")
+  miss <- needed[!sapply(needed, requireNamespace, quietly = TRUE)]
+  if (length(miss)) {
+    if (!requireNamespace("BiocManager", quietly = TRUE))
+      install.packages("BiocManager", repos = "https://cloud.r-project.org")
+    BiocManager::install(miss, ask = FALSE, update = FALSE)
+  }
+  library(ChIPseeker); library(clusterProfiler); library(org.Mm.eg.db); library(ggplot2)
+})
+
+PROJECT <- path.expand("~/IIITH/S26/mb/project")
+anno_csv <- file.path(PROJECT, "peaks/H3K27ac/H3K27ac_annotated.csv")
+df <- read.csv(anno_csv, stringsAsFactors = FALSE)
+cat("loaded", nrow(df), "annotated peaks\n")
+```
+
+## 1. Top H3K27ac peaks (by fold-enrichment)
+
+`V7` is MACS2 fold-enrichment (column 7 of the broadPeak file).
+
+```{r top}
+top20 <- df[order(-df$V7), c("seqnames","start","end","V7","SYMBOL","annotation")][1:20, ]
+top20$annotation <- substr(top20$annotation, 1, 30)
+knitr::kable(top20, row.names = FALSE, digits = 2,
+             col.names = c("chr","start","end","FoldEnr","Gene","Feature"))
+```
+
+## 2. Super-enhancer-style ranking ("hockey stick")
+
+Rank peaks by signal × length and look for the inflection point. Peaks beyond
+the inflection are super-enhancer candidates (ROSE-style; here using
+fold-enrichment × peak width as a quick proxy for stitched H3K27ac signal).
+
+```{r rose}
+df$signal <- df$V7 * df$width
+df$rank   <- rank(-df$signal)
+inflect   <- sum(df$signal > mean(df$signal) * 3)   # crude cutoff
+
+ggplot(df, aes(x = rank, y = signal)) +
+  geom_point(size = 0.4, alpha = 0.4) +
+  geom_vline(xintercept = inflect, color = "red", linetype = "dashed") +
+  scale_x_reverse() +
+  labs(title = "H3K27ac peak ranking (super-enhancer style)",
+       x = "Peak rank (best → worst)", y = "Signal (FoldEnr × width)") +
+  theme_minimal()
+
+cat("Super-enhancer-class peaks (signal > 3× mean):", inflect, "\n")
+top_se <- head(df[order(-df$signal), c("seqnames","start","end","width","V7","SYMBOL")], 10)
+knitr::kable(top_se, row.names = FALSE, digits = 2,
+             col.names = c("chr","start","end","width","FoldEnr","Gene"),
+             caption = "Top 10 candidate super-enhancers")
+```
+
+## 3. GO Biological Process enrichment
+
+Test the gene set associated with H3K27ac peaks against the mouse genome
+background. We use the `geneId` (Entrez) column from ChIPseeker.
+
+```{r go}
+genes <- unique(as.character(df$geneId))
+genes <- genes[!is.na(genes) & genes != ""]
+cat("input genes (Entrez):", length(genes), "\n")
+
+ego <- enrichGO(gene          = genes,
+                OrgDb         = org.Mm.eg.db,
+                keyType       = "ENTREZID",
+                ont           = "BP",
+                pAdjustMethod = "BH",
+                qvalueCutoff  = 0.05,
+                readable      = TRUE)
+
+knitr::kable(head(as.data.frame(ego)[, c("ID","Description","Count","p.adjust")], 15),
+             row.names = FALSE, digits = 4,
+             caption = "Top 15 enriched GO Biological Processes")
+
+dotplot(ego, showCategory = 12) + ggtitle("H3K27ac peak-associated genes — GO BP")
+```
+
+## Summary
+
+- **Top peaks** are dominated by promoters of housekeeping and lineage-defining
+  genes — consistent with H3K27ac marking active transcription.
+- **Hockey-stick ranking** identifies a small subset of unusually broad,
+  high-signal peaks that look super-enhancer-like (large genomic span × strong
+  fold-enrichment); these are the most likely cell-identity drivers.
+- **GO enrichment** of all peak-associated genes should highlight T-cell /
+  lymphocyte / IL-7 signaling biology if the IL-7 stimulation worked — see
+  the dot plot and table above.

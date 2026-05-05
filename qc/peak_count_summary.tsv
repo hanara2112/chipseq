@@ -1,0 +1,3 @@
+Sample	Condition	Mark	Peak_File	N_Peaks
+S295	IL7-High	H3K27ac	IL7-H_H3k27ac_S295_peaks.broadPeak	   18681
+S286	IL7-High	IgG	IL7-H_igG_S286_peaks.narrowPeak	0

@@ -1,0 +1,22 @@
+=== ChIPseeker summary — H3K27ac (S295) ===
+Peaks annotated:            18681 
+
+--- Genomic feature distribution (%) ---
+            Feature Frequency
+   Promoter (<=1kb)     50.47
+   Promoter (1-2kb)      2.28
+   Promoter (2-3kb)      2.59
+             5' UTR      0.44
+             3' UTR      1.85
+           1st Exon      2.30
+         Other Exon      3.13
+         1st Intron      7.24
+       Other Intron     10.84
+ Downstream (<=300)      0.05
+  Distal Intergenic     18.82
+
+--- aggregated ---
+Promoter  : 55.34 %
+Intergenic: 18.82 %
+Intron    : 18.08 %
+Exon      : 5.43 %

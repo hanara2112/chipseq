@@ -1,0 +1,48 @@
+INFO  @ Tue, 05 May 2026 05:32:29: 
+# Command line: callpeak -t /Users/aryamanbahl/IIITH/S26/mb/project/aligned/IL7-H_H3k27ac_S295_filtered_MAPQ20.bam -c /Users/aryamanbahl/IIITH/S26/mb/project/aligned/IL7-H_igG_S286_filtered_MAPQ20.bam -f BAMPE -g mm --broad -q 0.05 -n IL7-H_H3k27ac_S295 --outdir /Users/aryamanbahl/IIITH/S26/mb/project/peaks/H3K27ac
+# ARGUMENTS LIST:
+# name = IL7-H_H3k27ac_S295
+# format = BAMPE
+# ChIP-seq file = ['/Users/aryamanbahl/IIITH/S26/mb/project/aligned/IL7-H_H3k27ac_S295_filtered_MAPQ20.bam']
+# control file = ['/Users/aryamanbahl/IIITH/S26/mb/project/aligned/IL7-H_igG_S286_filtered_MAPQ20.bam']
+# effective genome size = 1.87e+09
+# band width = 300
+# model fold = [5, 50]
+# qvalue cutoff for narrow/strong regions = 5.00e-02
+# qvalue cutoff for broad/weak regions = 1.00e-01
+# The maximum gap between significant sites is assigned as the read length/tag size.
+# The minimum length of peaks is assigned as the predicted fragment length "d".
+# Larger dataset will be scaled towards smaller dataset.
+# Range for calculating regional lambda is: 1000 bps and 10000 bps
+# Broad region calling is on
+# Paired-End mode is on
+ 
+INFO  @ Tue, 05 May 2026 05:32:29: #1 read fragment files... 
+INFO  @ Tue, 05 May 2026 05:32:29: #1 read treatment fragments... 
+INFO  @ Tue, 05 May 2026 05:32:30: 830371 fragments have been read. 
+INFO  @ Tue, 05 May 2026 05:32:30: #1.2 read input fragments... 
+INFO  @ Tue, 05 May 2026 05:32:31: 730724 fragments have been read. 
+INFO  @ Tue, 05 May 2026 05:32:31: #1 mean fragment size is determined as 250.6 bp from treatment 
+INFO  @ Tue, 05 May 2026 05:32:31: #1 note: mean fragment size in control is 220.7 bp -- value ignored 
+INFO  @ Tue, 05 May 2026 05:32:31: #1 fragment size = 250.6 
+INFO  @ Tue, 05 May 2026 05:32:31: #1  total fragments in treatment: 830371 
+INFO  @ Tue, 05 May 2026 05:32:31: #1 user defined the maximum fragments... 
+INFO  @ Tue, 05 May 2026 05:32:31: #1 filter out redundant fragments by allowing at most 1 identical fragment(s) 
+INFO  @ Tue, 05 May 2026 05:32:32: #1  fragments after filtering in treatment: 830371 
+INFO  @ Tue, 05 May 2026 05:32:32: #1  Redundant rate of treatment: 0.00 
+INFO  @ Tue, 05 May 2026 05:32:32: #1  total fragments in control: 730724 
+INFO  @ Tue, 05 May 2026 05:32:32: #1 user defined the maximum fragments... 
+INFO  @ Tue, 05 May 2026 05:32:32: #1 filter out redundant fragments by allowing at most 1 identical fragment(s) 
+INFO  @ Tue, 05 May 2026 05:32:32: #1  fragments after filtering in control: 730724 
+INFO  @ Tue, 05 May 2026 05:32:32: #1  Redundant rate of control: 0.00 
+INFO  @ Tue, 05 May 2026 05:32:32: #1 finished! 
+INFO  @ Tue, 05 May 2026 05:32:32: #2 Build Peak Model... 
+INFO  @ Tue, 05 May 2026 05:32:32: #2 Skipped... 
+INFO  @ Tue, 05 May 2026 05:32:32: #3 Call peaks... 
+INFO  @ Tue, 05 May 2026 05:32:32: #3 Call broad peaks with given level1 -log10qvalue cutoff and level2: 1.301030, 1.000000... 
+INFO  @ Tue, 05 May 2026 05:32:32: #3 Pre-compute pvalue-qvalue table... 
+INFO  @ Tue, 05 May 2026 05:32:34: #3 Call peaks for each chromosome... 
+INFO  @ Tue, 05 May 2026 05:32:36: #4 Write output xls file... /Users/aryamanbahl/IIITH/S26/mb/project/peaks/H3K27ac/IL7-H_H3k27ac_S295_peaks.xls 
+INFO  @ Tue, 05 May 2026 05:32:36: #4 Write broad peak in broadPeak format file... /Users/aryamanbahl/IIITH/S26/mb/project/peaks/H3K27ac/IL7-H_H3k27ac_S295_peaks.broadPeak 
+INFO  @ Tue, 05 May 2026 05:32:36: #4 Write broad peak in bed12/gappedPeak format file... /Users/aryamanbahl/IIITH/S26/mb/project/peaks/H3K27ac/IL7-H_H3k27ac_S295_peaks.gappedPeak 
+INFO  @ Tue, 05 May 2026 05:32:36: Done! 

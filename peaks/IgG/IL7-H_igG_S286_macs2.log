@@ -1,0 +1,38 @@
+INFO  @ Tue, 05 May 2026 05:32:36: 
+# Command line: callpeak -t /Users/aryamanbahl/IIITH/S26/mb/project/aligned/IL7-H_igG_S286_filtered_MAPQ20.bam -f BAMPE -g mm -q 0.05 -n IL7-H_igG_S286 --outdir /Users/aryamanbahl/IIITH/S26/mb/project/peaks/IgG
+# ARGUMENTS LIST:
+# name = IL7-H_igG_S286
+# format = BAMPE
+# ChIP-seq file = ['/Users/aryamanbahl/IIITH/S26/mb/project/aligned/IL7-H_igG_S286_filtered_MAPQ20.bam']
+# control file = None
+# effective genome size = 1.87e+09
+# band width = 300
+# model fold = [5, 50]
+# qvalue cutoff = 5.00e-02
+# The maximum gap between significant sites is assigned as the read length/tag size.
+# The minimum length of peaks is assigned as the predicted fragment length "d".
+# Larger dataset will be scaled towards smaller dataset.
+# Range for calculating regional lambda is: 10000 bps
+# Broad region calling is off
+# Paired-End mode is on
+ 
+INFO  @ Tue, 05 May 2026 05:32:36: #1 read fragment files... 
+INFO  @ Tue, 05 May 2026 05:32:36: #1 read treatment fragments... 
+INFO  @ Tue, 05 May 2026 05:32:37: 730724 fragments have been read. 
+INFO  @ Tue, 05 May 2026 05:32:37: #1 mean fragment size is determined as 220.7 bp from treatment 
+INFO  @ Tue, 05 May 2026 05:32:37: #1 fragment size = 220.7 
+INFO  @ Tue, 05 May 2026 05:32:37: #1  total fragments in treatment: 730724 
+INFO  @ Tue, 05 May 2026 05:32:37: #1 user defined the maximum fragments... 
+INFO  @ Tue, 05 May 2026 05:32:37: #1 filter out redundant fragments by allowing at most 1 identical fragment(s) 
+INFO  @ Tue, 05 May 2026 05:32:38: #1  fragments after filtering in treatment: 730724 
+INFO  @ Tue, 05 May 2026 05:32:38: #1  Redundant rate of treatment: 0.00 
+INFO  @ Tue, 05 May 2026 05:32:38: #1 finished! 
+INFO  @ Tue, 05 May 2026 05:32:38: #2 Build Peak Model... 
+INFO  @ Tue, 05 May 2026 05:32:38: #2 Skipped... 
+INFO  @ Tue, 05 May 2026 05:32:38: #3 Call peaks... 
+INFO  @ Tue, 05 May 2026 05:32:38: #3 Pre-compute pvalue-qvalue table... 
+INFO  @ Tue, 05 May 2026 05:32:38: #3 Call peaks for each chromosome... 
+INFO  @ Tue, 05 May 2026 05:32:39: #4 Write output xls file... /Users/aryamanbahl/IIITH/S26/mb/project/peaks/IgG/IL7-H_igG_S286_peaks.xls 
+INFO  @ Tue, 05 May 2026 05:32:39: #4 Write peak in narrowPeak format file... /Users/aryamanbahl/IIITH/S26/mb/project/peaks/IgG/IL7-H_igG_S286_peaks.narrowPeak 
+INFO  @ Tue, 05 May 2026 05:32:39: #4 Write summits bed file... /Users/aryamanbahl/IIITH/S26/mb/project/peaks/IgG/IL7-H_igG_S286_summits.bed 
+INFO  @ Tue, 05 May 2026 05:32:39: Done! 

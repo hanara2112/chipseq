@@ -1,0 +1,80 @@
+# =============================================================
+# .gitignore — H3K27ac ChIP-seq assignment
+# Goal: keep scripts + small results + docs; drop large/regenerable data.
+# =============================================================
+
+# ---- raw data ------------------------------------------------
+# 1.5 GB of FASTQs — re-downloadable from the assignment data link
+student_dataset/
+
+# ---- reference genome ----------------------------------------
+# 3.5 GB Bowtie2 index — rebuildable via genome/make_mm10.sh
+# (use genome/* instead of genome/ so the !exception below works)
+genome/*
+!genome/make_mm10.sh
+
+# ---- intermediate pipeline artefacts -------------------------
+# Trimmed FASTQs (regenerable from raw)
+trimmed/*.fq.gz
+trimmed/*.fastq.gz
+# Per-sample post-trim FastQC artefacts (multiqc covers raw QC)
+trimmed/*_fastqc.html
+trimmed/*_fastqc.zip
+
+# BAMs are large + regenerable — keep only logs/metrics
+aligned/*.bam
+aligned/*.bam.bai
+aligned/*.sam
+
+# bigWig coverage tracks (regenerable from filtered BAMs)
+qc/*.bw
+
+# MultiQC raw data dir (HTML report itself is kept)
+qc/fastqc_raw/multiqc_report_data/
+
+# ---- archives ------------------------------------------------
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# ---- editor / OS / IDE junk ----------------------------------
+.DS_Store
+.idea/
+.vscode/
+.claude/
+*.swp
+*~
+
+# ---- R / RStudio --------------------------------------------
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+# RMarkdown render side-effects (cache dirs only — ship the rendered HTML deliverable)
+*_files/
+*_cache/
+
+# ---- python / conda -----------------------------------------
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# ---- logs from prior runs (stale) ---------------------------
+step*_*.log
+nohup.out
+
+# =============================================================
+# Explicitly KEEP (override blanket rules above):
+#   - all *.sh / *.R / *.Rmd scripts
+#   - all *.md docs (README, chipseq_analysis)
+#   - ChIP Project.pdf, implementation_plan.md.resolved
+#   - peaks/**/*.broadPeak, *.narrowPeak, *.gappedPeak, *.xls, *.csv, *.bed
+#   - qc/peak_count_summary.tsv, chipseeker_summary.txt, chipseeker_H3K27ac.pdf
+#   - qc/*_dup_metrics.txt, *_filter_stats.txt
+#   - qc/fastqc_raw/multiqc_report.html
+#   - aligned/*_bowtie2.log
+#   - peaks/**/*_macs2.log
+#   - trimmed/*_trimming_report.txt
+# Nothing to do — they're not matched by any rule above.
+# =============================================================

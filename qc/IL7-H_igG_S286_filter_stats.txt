@@ -1,0 +1,9 @@
+Sample:           IL7-H_igG_S286
+Input BAM:        /Users/aryamanbahl/IIITH/S26/mb/project/aligned/IL7-H_igG_S286_deduplicated.bam
+Output BAM:       /Users/aryamanbahl/IIITH/S26/mb/project/aligned/IL7-H_igG_S286_filtered_MAPQ20.bam
+MAPQ threshold:   >=20
+Flag require (-f): 2  (properly paired)
+Flag exclude (-F): 1804  (unmapped/mate-unmapped/secondary/QCfail/dup)
+--- read counts ---
+before: 1802666
+after:  1461448
